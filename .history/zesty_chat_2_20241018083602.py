@@ -3,6 +3,8 @@
 """
 
 # Commented out IPython magic to ensure Python compatibility.
+# %%capture --no-stderr
+# %pip install --upgrade --quiet langchain langgraph langchain-community beautifulsoup4 langchain_openai
 
 import getpass
 import os
@@ -116,10 +118,10 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
-# #streaming the output 
-# chain = rag_chain.pick('answer')
-# for chunk in chain.stream({'input': 'what is decomposition?'}):
-#         print(chunk, end= " ")
+#streaming the output 
+chain = rag_chain.pick('answer')
+for chunk in chain.stream({'input': 'what is decomposition?'}):
+        print({achunk, end= " ")
 
 ### Statefully manage chat history ###
 class State(TypedDict):
@@ -151,38 +153,53 @@ app = workflow.compile(checkpointer=memory)
 config = {"configurable": {"thread_id": "abc123"}}
 
 
-def handle_conversation():
-    context = ''
-    print("Type 'exit' to quit.")
-    # # print('')
-    name= input('whats your name?   ')
-    # print(f"Hello, {name}! How can I assist you today?")
-    # background= input(f" {name}: ")
+# def handle_conversation():
+#     context = ''
+#     print("Type 'exit' to quit.")
+#     # # print('')
+#     # name= input('whats your name?   ')
+#     # print(f"Hello, {name}! How can I assist you today?")
+#     # background= input(f" {name}: ")
 
-    while True:
-      user_input = input(f" {name}:  ")
+#     while True:
+#       user_input = input("You:  ")
 
-      if user_input.lower()== "exit":
-        break
+#       if user_input.lower()== "exit":
+#         break
 
-      config = {"configurable": {"thread_id": "abc234"}}
+#       config = {"configurable": {"thread_id": "abc234"}}
 
-      # for chunk, result in app.invoke({"messages": user_input, "language": 'English'},
-      #                                   config, stream_mode="messages"):
-      #     if isinstance(chunk, AIMessage):  # Filter to just model responses
-      #         print(chunk.content, end="")
+#       # for chunk, result in app.invoke({"messages": user_input, "language": 'English'},
+#       #                                   config, stream_mode="messages"):
+#       #     if isinstance(chunk, AIMessage):  # Filter to just model responses
+#       #         print(chunk.content, end="")
 
-      result = app.invoke({"input": user_input},
-                          config=config,
-                          stream_mode="values")
+#       result = app.invoke({"input": user_input},
+#                           config=config,
+#                           stream_mode="values")
 
-      print("Zesty: ", result["answer"])
+#       print("Zesty: ", result["answer"])
 
-      context += f"\nUser: {user_input}\nAI: {result}"
+#       context += f"\nUser: {user_input}\nAI: {result}"
 
-if __name__ == "__main__":
-  handle_conversation()
-
-
+# if __name__ == "__main__":
+#   handle_conversation()
 
 
+
+
+app = Flask(__name__)
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.get_json()
+    user_input = data.get('message')
+    if not user_input:
+        return jsonify({'error': 'Message is required'}), 400
+
+    result = app.invoke({"input": user_input}, config=config, stream_mode="values" )
+    
+    return jsonify({'response': result['answer']})
+
+if __name__ == '__main__':
+    app.run(debug=True)

@@ -3,6 +3,8 @@
 """
 
 # Commented out IPython magic to ensure Python compatibility.
+# %%capture --no-stderr
+# %pip install --upgrade --quiet langchain langgraph langchain-community beautifulsoup4 langchain_openai
 
 import getpass
 import os
@@ -160,7 +162,7 @@ def handle_conversation():
     # background= input(f" {name}: ")
 
     while True:
-      user_input = input(f" {name}:  ")
+      user_input = input(f" :  ")
 
       if user_input.lower()== "exit":
         break

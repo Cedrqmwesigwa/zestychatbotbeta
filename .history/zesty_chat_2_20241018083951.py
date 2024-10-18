@@ -3,6 +3,8 @@
 """
 
 # Commented out IPython magic to ensure Python compatibility.
+# %%capture --no-stderr
+# %pip install --upgrade --quiet langchain langgraph langchain-community beautifulsoup4 langchain_openai
 
 import getpass
 import os
@@ -151,37 +153,37 @@ app = workflow.compile(checkpointer=memory)
 config = {"configurable": {"thread_id": "abc123"}}
 
 
-def handle_conversation():
-    context = ''
-    print("Type 'exit' to quit.")
-    # # print('')
-    name= input('whats your name?   ')
-    # print(f"Hello, {name}! How can I assist you today?")
-    # background= input(f" {name}: ")
+# def handle_conversation():
+#     context = ''
+#     print("Type 'exit' to quit.")
+#     # # print('')
+#     # name= input('whats your name?   ')
+#     # print(f"Hello, {name}! How can I assist you today?")
+#     # background= input(f" {name}: ")
 
-    while True:
-      user_input = input(f" {name}:  ")
+#     while True:
+#       user_input = input("You:  ")
 
-      if user_input.lower()== "exit":
-        break
+#       if user_input.lower()== "exit":
+#         break
 
-      config = {"configurable": {"thread_id": "abc234"}}
+#       config = {"configurable": {"thread_id": "abc234"}}
 
-      # for chunk, result in app.invoke({"messages": user_input, "language": 'English'},
-      #                                   config, stream_mode="messages"):
-      #     if isinstance(chunk, AIMessage):  # Filter to just model responses
-      #         print(chunk.content, end="")
+#       # for chunk, result in app.invoke({"messages": user_input, "language": 'English'},
+#       #                                   config, stream_mode="messages"):
+#       #     if isinstance(chunk, AIMessage):  # Filter to just model responses
+#       #         print(chunk.content, end="")
 
-      result = app.invoke({"input": user_input},
-                          config=config,
-                          stream_mode="values")
+#       result = app.invoke({"input": user_input},
+#                           config=config,
+#                           stream_mode="values")
 
-      print("Zesty: ", result["answer"])
+#       print("Zesty: ", result["answer"])
 
-      context += f"\nUser: {user_input}\nAI: {result}"
+#       context += f"\nUser: {user_input}\nAI: {result}"
 
-if __name__ == "__main__":
-  handle_conversation()
+# if __name__ == "__main__":
+#   handle_conversation()
 
 
 

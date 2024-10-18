@@ -3,6 +3,8 @@
 """
 
 # Commented out IPython magic to ensure Python compatibility.
+# %%capture --no-stderr
+# %pip install --upgrade --quiet langchain langgraph langchain-community beautifulsoup4 langchain_openai
 
 import getpass
 import os

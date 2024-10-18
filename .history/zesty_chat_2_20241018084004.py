@@ -3,6 +3,8 @@
 """
 
 # Commented out IPython magic to ensure Python compatibility.
+# %%capture --no-stderr
+# %pip install --upgrade --quiet langchain langgraph langchain-community beautifulsoup4 langchain_openai
 
 import getpass
 import os
@@ -155,12 +157,12 @@ def handle_conversation():
     context = ''
     print("Type 'exit' to quit.")
     # # print('')
-    name= input('whats your name?   ')
+    # name= input('whats your name?   ')
     # print(f"Hello, {name}! How can I assist you today?")
     # background= input(f" {name}: ")
 
     while True:
-      user_input = input(f" {name}:  ")
+      user_input = input("You:  ")
 
       if user_input.lower()== "exit":
         break

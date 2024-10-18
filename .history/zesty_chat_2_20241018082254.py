@@ -3,6 +3,8 @@
 """
 
 # Commented out IPython magic to ensure Python compatibility.
+# %%capture --no-stderr
+# %pip install --upgrade --quiet langchain langgraph langchain-community beautifulsoup4 langchain_openai
 
 import getpass
 import os
@@ -33,7 +35,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import START, StateGraph
 from langgraph.graph.message import add_messages
 from typing_extensions import Annotated, TypedDict
-from flask import Flask, request, jsonify
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
@@ -116,10 +117,6 @@ question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
-# #streaming the output 
-# chain = rag_chain.pick('answer')
-# for chunk in chain.stream({'input': 'what is decomposition?'}):
-#         print(chunk, end= " ")
 
 ### Statefully manage chat history ###
 class State(TypedDict):
@@ -155,12 +152,12 @@ def handle_conversation():
     context = ''
     print("Type 'exit' to quit.")
     # # print('')
-    name= input('whats your name?   ')
+    # name= input('whats your name?   ')
     # print(f"Hello, {name}! How can I assist you today?")
     # background= input(f" {name}: ")
 
     while True:
-      user_input = input(f" {name}:  ")
+      user_input = input("You:  ")
 
       if user_input.lower()== "exit":
         break
@@ -186,3 +183,20 @@ if __name__ == "__main__":
 
 
 
+app = Flask(__name__)
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.get_json()
+    user_input = data.get('message')
+    if not user_input:
+        return jsonify({'error': 'Message is required'}), 400
+
+    result = app.invoke(
+        {"input": user_input},
+        config=config,
+    )
+    return jsonify({'response': result['answer']})
+
+if __name__ == '__main__':
+    app.run(debug=True)
