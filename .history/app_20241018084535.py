@@ -18,7 +18,6 @@ def chat():
     # chain = rag_chain.pick('answer')
     # for chunk in chain.stream(result):
     #     print(chunk, end= " ")
-    
     return jsonify({'response': result['answer']})
 
 if __name__ == '__main__':

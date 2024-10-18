@@ -10,14 +10,12 @@ def chat():
     if not user_input:
         return jsonify({'error': 'Message is required'}), 400
     
-    
-        
-    result = app.invoke({"input": user_input}, config=config, stream_mode="values" )
-    
     # #streaming the output 
     # chain = rag_chain.pick('answer')
-    # for chunk in chain.stream(result):
+    # for chunk in chain.stream(resu):
     #     print(chunk, end= " ")
+        
+    result = app.invoke({"input": user_input}, config=config, stream_mode="values" )
     
     return jsonify({'response': result['answer']})
 
